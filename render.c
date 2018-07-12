@@ -21,6 +21,8 @@
 #include "render.h"
 #include "telemetry.h"
 #include "osdconfig.h"
+#include "DejaVuSans.inc"
+#include "osdicons.inc"
 
 #define TO_FEET 3.28084
 #define TO_MPH 0.621371
@@ -78,21 +80,29 @@ void setfillstroke() {
 
 
 void render_init() {
-    char filename[100] = "/boot/osdfonts/";
-    InitShapes(&width, &height);
+    init(&width, &height);
 
-    strcat(filename, FONT);
-    myfont = LoadTTFFile(filename);
-    if (!myfont) {
-        fputs("ERROR: Failed to load font!", stderr);
-        exit(1);
-    }
+    myfont = loadfont(DejaVuSans_glyphPoints, 
+        DejaVuSans_glyphPointIndices, 
+    	DejaVuSans_glyphInstructions,                
+    	DejaVuSans_glyphInstructionIndices, 
+        DejaVuSans_glyphInstructionCounts, 
+        DejaVuSans_glyphAdvances,
+        DejaVuSans_characterMap, 
+    	DejaVuSans_glyphCount);
+    myfont.descender_height = DejaVuSans_descender_height;
+    myfont.font_height = DejaVuSans_font_height;
 
-    osdicons = LoadTTFFile("/boot/osdfonts/osdicons.ttf");
-    if (!osdicons) {
-        fputs("ERROR: Failed to load osdicons.ttf font!", stderr);
-        exit(1);
-    }
+    osdicons = loadfont(osdicons_glyphPoints, 
+        osdicons_glyphPointIndices, 
+    	osdicons_glyphInstructions,                
+    	osdicons_glyphInstructionIndices, 
+        osdicons_glyphInstructionCounts, 
+        osdicons_glyphAdvances,
+        osdicons_characterMap, 
+    	osdicons_glyphCount);
+    osdicons.descender_height = osdicons_descender_height;
+    osdicons.font_height = osdicons_font_height;
 
     home_counter = 0;
 //  vgSeti(VG_MATRIX_MODE, VG_MATRIX_GLYPH_USER_TO_SURFACE);
